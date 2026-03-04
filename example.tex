@@ -1,0 +1,200 @@
+\documentclass{csuthesis}
+\usepackage{amsmath, amsthm, amssymb}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%% -- 基本配置
+%% 中文标题
+\cntitle{基于平稳过程的二阶矩分析与应用}
+\entitle{Quantitative regularity of the Navier-Stokes equations}
+%% 中文关键词   NOTE: 以中文[；]符号分割，且没有末尾标点
+\cnkeywords{平稳过程；二阶矩；自动化模板；\LaTeX}
+%% 英文关键词   NoTE: 以英文[; ]符号分割，不要大写，且没有末尾标点
+\enkeywords{time-changed stochastic differential equation; backward Euler method}
+%% 分类号 (classification)
+\cnclc{O211.61}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%% -- 配置定义定理等环境
+\setdefinitionname{Definition}
+\settheoremname{Theorem}
+\setlemmaname{Lemma}
+\setcorollaryname{Corollary}
+\setremarkname{Remark}
+\setassumename{Assume}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%% -- 参考文献源文件
+\addbibresource{ref.bib}
+
+
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%% - 用于标记论文的前导部分 (摘要 目录 符号定义等)
+\begin{csuconfig}
+%%% MARK: 中文摘要页
+    \begin{cnabstract}
+        这里是中文摘要的第一段。摘要内容可以很长，详细介绍研究背景、方法和结论。根据 Word 模版的相关要求，摘要在另起一段时必须空两格，但是这就是 \LaTeX 的默认行为，所以我们不需要额外设置。
+
+        这里是摘要的第二段。因为我们在类文件中使用了 \verb|\long\def|，所以这里可以有空行换段。
+
+        测试一下数学公式：计算方差 $\sigma^2$ 或者独立公式：
+        $$ \Sigma = \mathbb{E}[(X - \mu)(X - \mu)^T] $$
+
+        这就是最后一段了。根据 Word 模版的相关要求，摘要最后一段后面不需要空行。我们在这里写一堆乱七八糟的废话来测试最后一段较长时这里的行为。另外，从这一段到图例提示、从图例提示到关键词要空两行。
+    \end{cnabstract}
+%%% MARK: 英文摘要页
+    \begin{enabstract}
+        As an important mathematical tool for describing complex  dynamical systems, stochastic differential equations (SDEs) have a wide range of applications in many fields such as chemical kinetics and statistical physics.
+
+        As a special class of stochastic differential equations, time-changed stochastic differential equations (TCSDEs) replace the time variable t with a time changed process E(t), which makes it show unique advantages in modeling
+        anomalous diffusion processes such as subdiffusion.
+
+        However, the introduction of the time-changed structure makes the analytic solution difficult
+        to express explicitly, which makes the development of high-precision numerical approximation parties necessary.
+        In this thesis, we systematically study the numerical solution of a class
+        of time-changed stochastic differential equations with a superlinear growth
+        of the coefficients of the drift and diffusion terms.
+
+        The structure of the
+        thesis is as follows: Chapter 1 summarizes the theoretical development
+        of stochastic differential equations and time-changed stochastic differential equations, focuses on the current status of numerical algorithms for
+        time-changed stochastic differential equations, and clarifies the innovative
+        value and core contributions of this study; Chapter 2 introduces some basic
+        stochastic analytical definitions, as well as special definitions and necessary
+        lemmas for time-changed stochastic differential equations.
+        The core theoretical advancements are detailed in Chapters 3-5.
+
+        In Chapter 3, by leveraging the duality principle-a pivotal theoretical tool-and
+        establishing exponential moment bounds for the time-changed processes,
+        we transform the numerical approximation of the original equation into an
+        equivalent analysis of its dual system. This framework, combined with existing simulation algorithms for the time-change process E(t), enables the
+        derivation of a general convergence criterion for one-step numerical methods.
+    \end{enabstract}
+%%% MARK: 目录页
+    \makecsutoc
+%%% MARK: 符号定义页
+    \begin{csusymbols}
+        \begin{table}[h]
+            \centering
+            \begin{tabular}{|r|l|} \hline 7C0 & hexadecimal \\ 3700 & octal \\ \cline{2-2} 11111000000 & binary \\ \hline \hline 1984 & decimal \\ \hline
+            \end{tabular}
+        \end{table}
+    \end{csusymbols}
+\end{csuconfig}
+
+%%% MARK: 正文部分
+\csucontentstart
+\chapter{Chapter01}
+本章介绍一些基本的定义、引理和不等式. 主要内容包括一些概率论、随机
+分析和随机微分方程相关知识. 特别地, 将介绍一些和 Navier-Stokes 方程有关的定义和引理.
+\section{第一节}
+我们给出以下的定义。
+\begin{Definition}[样本空间]
+    The sample space $\Omega$ satisfies...
+\end{Definition}
+\subsection{第一小节}
+\begin{table}[h]
+    \centering
+    \caption{不同算法的性能对比测试结果} % 自动应用五号楷体、段前1行段后0行
+    \begin{tabular}{c c c} % 'c' 表示水平居中
+        \toprule % 顶部粗线 (1.5bp)
+        算法名称 & 准确率 (\%) & 运行时间 (s) \\
+        \midrule % 表头下方细线 (0.75bp)
+        传统方法 & 85.2 & 1.25 \\
+        改进算法 & 92.4 & 0.86 \\
+        深度学习 & 98.1 & 5.42 \\
+        \bottomrule % 底部粗线 (1.5bp)
+    \end{tabular}
+\end{table}
+
+\subsection{第二小节}
+这是主公式的普通编号，默认在右侧且无虚线：
+\begin{equation}
+    E = mc^2
+\end{equation}
+
+如果公式需要分列排版（使用 a, b, c 区分），请使用 subequations 环境包裹它们：
+\begin{subequations}
+    \begin{align}
+        y_1 &= ax + b \label{eq:sub1} \\
+        y_2 &= cx + d \label{eq:sub2}
+    \end{align}
+\end{subequations}
+如公式 \eqref{eq:sub1} 和 \eqref{eq:sub2} 所示。
+\subsection{第三小节}
+在这里插入一个子图环境。顺带着插入一些索引：\cite{2012-Seregin-JDE} 以及 \cite{Cho2024-STCM-Ring}。
+\begin{figure}[ht]
+    \centering
+    % 第一个子图
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \rule{4cm}{3cm} % 用黑块代替真实图片 \includegraphics[width=\textwidth]{fig1.png}
+        \caption{正常状态下的样本} % 自动显示 a
+    \end{subfigure}
+    \hfill % 两个子图之间的弹性空白
+    % 第二个子图
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \rule{4cm}{3cm}
+        \caption{受干扰后的样本} % 自动显示 b
+    \end{subfigure}
+    
+    \caption{实验样本的微观结构对比图} % 总标题
+\end{figure}
+
+\section{第二节}
+\subsection{第一小节}
+\subsection{第二小节}
+\subsection{第三小节}
+
+\chapter{第二章}
+\section{第一节}
+\subsection{第一小节}
+\subsection{第二小节}
+\subsection{第三小节}
+\section{第二节}
+\subsection{第一小节}
+\subsection{第二小节}
+\subsection{第三小节}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%% -- 参考文献页
+\makecsureferencepage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%% -- 附录 A
+\begin{csuappendix}
+    这是第一个附录的正文。它的标题会自动变成“附录 A”。
+    
+    测试一下附录里的公式编号：
+    \begin{equation}
+        F = ma
+    \end{equation}
+    % 右侧会显示为 (A-1)
+\end{csuappendix}
+\begin{csuappendix}[算法推导过程]
+    这是第二个附录。它的标题会自动变成“附录 B\qquad 算法推导过程”。
+    
+    测试一下附录里的图表编号：
+    \begin{table}[ht]
+        \centering
+        \caption{附录测试表} % 上方会显示“表B-1 附录测试表”
+        \begin{tabular}{cc}
+            \toprule
+            A & B \\
+            \midrule
+            1 & 2 \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
+\end{csuappendix}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%% -- 攻读学位期间的研究成果
+\begin{cnresearchresult}
+摆烂三年美滋滋，要什么研究成果？
+\end{cnresearchresult}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%% -- 致谢
+\begin{cnthanks}
+作者对给予指导、各类资助和协助完成研究工作以及提供各种对论文工作有利条件的单位及个人表示感谢。
+致谢应实事求是，切忌浮夸与庸俗之词。
+\end{cnthanks}
+\end{document}
