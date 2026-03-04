@@ -16,6 +16,20 @@ To successfully compile this template, you must use the `xelatex` and `biber` to
 | **macOS** | MacTeX 2020 or later (based on TeX Live) |
 | **Linux** | TeX Live 2020 or later |
 
+## Configuration (Title Page, Front Matter, etc.)
+
+The template uses a hybrid approach to handle complex front matter (such as the title page, statement of originality, etc.). Please follow these steps to configure your information:
+
+1. **Edit Information:** Open the `.docx` files located in the `config/docx/` directory using **Microsoft Word** or **WPS Office**, and fill in your personal and thesis information.
+2. **Auto Conversion:** Open your terminal and run the following Python commands to automatically convert the Word documents into PDFs:
+   ```bash
+   pip3 install docx2pdf
+   python3 ./config/src/converter.py
+   ```
+   *If the script runs without errors, the configuration is successfully completed.*
+3. **Manual Conversion (Fallback):** If the script throws an error, or if you are using **WPS Office** (which is not compatible with the automated script), please manually save/export those edited `.docx` files as `.pdf` format, and copy them into the `config/pdf/` directory.
+4. **Compile:** Recompile your LaTeX document. The document class will automatically import these PDFs and handle all the layout details for you.
+
 ## Getting Started
 
 ### 1. Install TeX Distribution
