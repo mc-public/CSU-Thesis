@@ -46,10 +46,12 @@ cd csu-thesis
 
 ### 3. Open and Compile
 Open the `example.tex` file using your preferred LaTeX editor. Recommended editors include:
+- **VS Code** (with the *LaTeX Workshop* extension)
+- **Overleaf** or **TeXPage**
 - **TeXstudio** (Windows / macOS / Linux)
 - **TeXmaker** (Windows / macOS / Linux)
 - **TeXifier** (macOS only)
-- **VS Code** (with the *LaTeX Workshop* extension)
+
 
 ### 4. Compilation Sequence
 Make sure to configure your editor to use **XeLaTeX** as the default compiler and **Biber** as the bibliography tool. To correctly generate the table of contents, cross-references, and bibliography, please compile using the following sequence:
