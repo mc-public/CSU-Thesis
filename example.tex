@@ -1,5 +1,34 @@
-\documentclass{csuthesis}
-\usepackage{amsmath, amsthm, amssymb}
+%% example.tex
+%% 2026/03/05 v1.1  A Part of CSU Thesis Template
+%% * Require: texlive 2020+
+%% * 
+%% * 建议构建方式: 
+%% *   ** latexmk 
+%% *   ** xelatex-->biber-->xelatex-->xelatex
+%% *   ** NOTE: 编译前请确保 config/pdf 中包含 cover.pdf, frontispiece.pdf 以及 statement.pdf
+%% *   **       这三个文件, 它们将作为封面页, 扉页等被当前框架自动处理.
+%% *   ** NOTE: 请保持 config 文件夹的结构, **不要** 对 'config/font' 中的内容做任何改动 
+%% *   **       除非你清楚自己在做什么.
+%% * 建议工作流程:
+%% *   ** VSCode + LaTeX WorkShop (Extension), 然后选择 latexmk 方式编译.
+%% *   ** Overleaf 或者 TeXPage: 把整个文件夹上传到 Overleaf 或者 TeXPage. 
+%% * 对于标题页、扉页等的配置方式: 
+%% *   ** 1. 在 ./config/docx 文件夹中的 docx 文件中填写配置信息;
+%% *   ** 2. 如果你安装了 Microsoft Word, 执行脚本 'python3 ./config/src/converter.py';
+%% *   ** 3. 如果没有安装 Microsoft Word, 用 WPS Office 等把这些 docx 文档转换为 pdf 文档
+%% *   **    并保存至 ./config/pdf 文件夹，文件名称必须是 convert.pdf 等;
+%% *   ** 4. 仔细查看 ./config/pdf 文件夹中的 pdf 文档, 确认这些文件中的内容是正确的;
+%% *   ** 5. 编译当前文档即可.
+%% * 参考文献:
+%% *   ** 在 ref.bib 中添加参考文献条目. 其它的格式问题等, 框架会为你自动处理.
+%% * 目录与图例数量:
+%% *   ** 使用正确的构建方式, 框架会为你自动处理.
+
+\documentclass[bibbackend=biber]{csuthesis}
+
+%%% Note 以下宏包仅用于 **符号说明** 部分的示例
+\usepackage{longtable, array} % 用于符号说明部分的示例
+\usepackage{zhlipsum, lipsum} % 用于生成一部分示例文字
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%% -- 基本配置
 %% 中文标题
@@ -7,9 +36,9 @@
 \entitle{Quantitative regularity of the Navier-Stokes equations}
 %% 中文关键词   NOTE: 以中文[；]符号分割，且没有末尾标点
 \cnkeywords{平稳过程；二阶矩；自动化模板；\LaTeX}
-%% 英文关键词   NoTE: 以英文[; ]符号分割，不要大写，且没有末尾标点
+%% 英文关键词   NOTE: 以英文[; ]符号分割，不要大写，且没有末尾标点
 \enkeywords{time-changed stochastic differential equation; backward Euler method}
-%% 分类号 (classification)
+%% 中图分类号 (classification) [https://www.clcindex.com]
 \cnclc{O211.61}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%% -- 配置定义定理等环境
@@ -32,10 +61,15 @@
     \begin{cnabstract}
         这里是中文摘要的第一段。摘要内容可以很长，详细介绍研究背景、方法和结论。根据 Word 模版的相关要求，摘要在另起一段时必须空两格，但是这就是 \LaTeX 的默认行为，所以我们不需要额外设置。
 
+        （1）这是第一条。
+
+        （2）这是第二条。
         这里是摘要的第二段。因为我们在类文件中使用了 \verb|\long\def|，所以这里可以有空行换段。
 
         测试一下数学公式：计算方差 $\sigma^2$ 或者独立公式：
         $$ \Sigma = \mathbb{E}[(X - \mu)(X - \mu)^T] $$
+
+        图例提示与目录信息均是{\bfseries 自动生成}的。你需要使用 \verb|xetex| 以及 \verb|Biber| 工具链进行编译。
 
         这就是最后一段了。根据 Word 模版的相关要求，摘要最后一段后面不需要空行。我们在这里写一堆乱七八糟的废话来测试最后一段较长时这里的行为。另外，从这一段到图例提示、从图例提示到关键词要空两行。
     \end{cnabstract}
@@ -71,26 +105,47 @@
     \makecsutoc
 %%% MARK: 符号定义页
     \begin{csusymbols}
-        \begin{table}[h]
-            \centering
-            \begin{tabular}{|r|l|} \hline 7C0 & hexadecimal \\ 3700 & octal \\ \cline{2-2} 11111000000 & binary \\ \hline \hline 1984 & decimal \\ \hline
-            \end{tabular}
-        \end{table}
+        \begin{longtable}{c p{0.75\textwidth}}
+            % --- 在这里填写你的符号 ---
+            $A, B$          & 矩阵 \\
+            $\boldsymbol{x}$ & 向量（\verb|\boldsymbol{}|） \\
+            $\alpha, \beta$  & 学习率或惩罚系数 \\
+            $\mathbb{R}$    & 实数集 \\
+            $\mathcal{L}$   & 损失函数 \\
+            $\sum_{i=1}^{n}$ & 求和算子 \\
+            $\int_{a}^{b}$  & 积分算子 \\
+            $O(n \log n)$   & 算法的时间复杂度 \\
+            $f(x) \to y$    & 映射关系 \\
+            $\|\boldsymbol{x}\|_2$ & 向量的 $L_2$ 范数 \\
+            $\hat{y}_i$     & 模型的预测值 \\ 
+        \end{longtable}
     \end{csusymbols}
 \end{csuconfig}
 
-%%% MARK: 正文部分
+%%% MARK: 正文前标记
+%%% NOTE: 必须确保它在第一个 chapter 的前方, 否则会导致未定义行为
 \csucontentstart
-\chapter{Chapter01}
-本章介绍一些基本的定义、引理和不等式. 主要内容包括一些概率论、随机
-分析和随机微分方程相关知识. 特别地, 将介绍一些和 Navier-Stokes 方程有关的定义和引理.
-\section{第一节}
-我们给出以下的定义。
+%%% 正文部分
+\chapter{绪论}
+\zhlipsum[1] % 随机文本
+\section{研究背景与意义}
+\zhlipsum[3]
+\zhlipsum[3]
 \begin{Definition}[样本空间]
-    The sample space $\Omega$ satisfies...
+    样本空间 $\Omega$ 是一个随机试验中所有可能基本结果的集合. 每个结果称为一个样本点, 且满足以下条件:
+    \begin{itemize}
+        \item 互斥性: 每次试验有且仅有一个样本点出现
+        \item 完备性: 所有可能的结果均被包含在样本空间中.
+    \end{itemize}
 \end{Definition}
+\zhlipsum[3]
+\begin{Corollary}
+    这是一些推论. 如果想要自定义环境名称，在导言区调用 API： 
+    
+    \verb|\setcorollaryname{Corollary}|
+\end{Corollary}
 \subsection{第一小节}
-\begin{table}[h]
+\begin{table}[ht]
     \centering
     \caption{不同算法的性能对比测试结果} % 自动应用五号楷体、段前1行段后0行
     \begin{tabular}{c c c} % 'c' 表示水平居中
@@ -139,21 +194,21 @@
     \caption{实验样本的微观结构对比图} % 总标题
 \end{figure}
 
-\section{第二节}
+\section{研究现状}
+\section{研究目的}
+\section{论文结构安排}
 \subsection{第一小节}
 \subsection{第二小节}
 \subsection{第三小节}
 
-\chapter{第二章}
-\section{第一节}
+\chapter{预备知识}
+\section{基本随机分析的定义及性质}
 \subsection{第一小节}
 \subsection{第二小节}
-\subsection{第三小节}
-\section{第二节}
+\section{有关时变的定义及性质}
 \subsection{第一小节}
 \subsection{第二小节}
-\subsection{第三小节}
-
+\section{一些重要的不等式}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%% -- 参考文献页

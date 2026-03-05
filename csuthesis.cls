@@ -1,12 +1,42 @@
-% =========================================================
 % csuthesis.cls
-% 2026/03/04 v1.0 CSU Thesis Template
-% =========================================================
+% 2026/03/05 v1.1 CSU Thesis Template
+% Require: texlive 2020+
+% Author: ChaoMeng 
+
+%%%% Engine Check
+\RequirePackage{iftex}
+\ifxetex
+\else
+    \ClassError{csuthesis}{
+        \MessageBreak
+        ********************************************************\MessageBreak
+        **                                                      \MessageBreak
+        **   Error: USE 'xelatex' or 'luatex' to compile!       \MessageBreak
+        **   Error: Please use  to compile this thesis!         \MessageBreak
+        **                                                      \MessageBreak
+        ********************************************************
+    }{Please use lualatex or xelatex to compile this thesis.}
+    \stop
+\fi
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{csuthesis}[2026/03/04 v1.0 CSU Thesis Template]
+\ProvidesClass{csuthesis}[2026/03/05 v1.1 CSU Thesis Template]
+\LoadClass[a4paper, openany, fontset=none, UTF8]{ctexbook}
+%%%% Options
+\RequirePackage{kvoptions}
+\SetupKeyvalOptions{
+    family=csu,
+    prefix=csu@,
+    setkeys=\kvsetkeys
+}
+\DeclareStringOption[biber]{bibbackend}
+\ProcessKeyvalOptions*
+% 1. 关闭内容流压缩 (Text/Graphics streams)
+\special{pdf: compresslevel 0}
 
-\LoadClass[a4paper, openany, fontset=none]{ctexbook}
+% 2. 关闭对象流压缩 (Object streams, PDF 1.5+ 特性)
+\special{pdf: objcompresslevel 0}
+%%%% Requires
 \RequirePackage{xeCJK}
 \RequirePackage{geometry}
 \RequirePackage{pdfpages}
@@ -14,14 +44,17 @@
 \RequirePackage{titletoc}
 \RequirePackage{fancyhdr}
 \RequirePackage{amsthm}
-\RequirePackage{amsmath}     
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{newtxmath}  
 \RequirePackage{caption}
 \RequirePackage{subcaption} 
 \RequirePackage{booktabs}
 \RequirePackage{array}
 \RequirePackage{etoolbox}
+\RequirePackage{enumitem}
 \RequirePackage[
-    backend=biber,
+    backend=\csu@bibbackend,
     style=gb7714-2015,
     sorting=none,      
     maxnames=3,
@@ -51,7 +84,8 @@
 %% Set songti
 \setCJKfamilyfont{songti}{SimSun.ttf}[
     ExternalLocation=config/font/,
-    AutoFakeBold=false
+    % BoldFont = SimHei.ttf,
+    AutoFakeBold=true
 ]
 \newcommand{\songti}{\CJKfamily{songti}}
 %% Set heiti
@@ -68,7 +102,8 @@
 %% Set kaishu
 \setCJKfamilyfont{kaishu}{SimKai.ttf}[
     ExternalLocation=config/font/,
-    AutoFakeBold=true
+    AutoFakeBold=true,
+    ItalicFont=SimKai.ttf
 ]
 \newcommand{\kaishu}{\CJKfamily{kaishu}}
 
@@ -92,14 +127,14 @@
     },
     section = {
         format = \zihao{4} \songti \raggedright,
-        beforeskip = 10bp,  
-        afterskip = 8bp, 
+        beforeskip = 15bp,  
+        afterskip = 15bp, 
         fixskip = true
     },
     subsection = {
         format = \zihao{-4} \songti \raggedright,
-        beforeskip = 10bp,
-        afterskip = 8bp,
+        beforeskip = 15bp,
+        afterskip = 15bp,
         fixskip = true
     }
 }
@@ -123,12 +158,12 @@
 %%%% -- Load auto-generated pdf
 \IfFileExists{./config/pdf/cover.pdf}{
     \AtBeginDocument{
-        \includepdf[pages={-, {}}, fitpaper=true]{./config/pdf/cover.pdf}
+        \includepdf[pages={1, {}}, fitpaper=true]{./config/pdf/cover.pdf}
     }
 }{
     \ClassError{csuthesis}{
         File 'cover.pdf' not found! \MessageBreak
-        Please run 'python config.py' in the terminal to generate 'cover.pdf' based on the information in 'config.json', or provide a custom cover PDF at './config/pdf/cover.pdf'.
+        Please run 'python ./config/src/converter.py' in the terminal to generate 'cover.pdf' based on the information in 'config.json', or provide a custom cover PDF at './config/pdf/cover.pdf'.
     }{
         The document class csuthesis requires 'cover.pdf' for the cover page.
     }
@@ -136,12 +171,12 @@
 
 \IfFileExists{./config/pdf/frontispiece.pdf}{
     \AtBeginDocument{
-        \includepdf[pages={-, {}}, fitpaper=true]{./config/pdf/frontispiece.pdf}
+        \includepdf[pages={1, {}}, fitpaper=true]{./config/pdf/frontispiece.pdf}
     }
 }{
     \ClassError{csuthesis}{
         File 'frontispiece.pdf' not found! \MessageBreak
-        Please run 'python config.py' in the terminal to generate 'frontispiece.pdf' based on the information in 'config.json', or provide a custom frontispiece PDF at './config/pdf/frontispiece.pdf'.
+        Please run 'python ./config/src/converter.py' in the terminal to generate 'frontispiece.pdf' based on the information in 'config.json', or provide a custom frontispiece PDF at './config/pdf/frontispiece.pdf'.
     }{
         The document class csuthesis requires 'frontispiece.pdf' for the frontispiece page.
     }
@@ -149,21 +184,18 @@
 
 \IfFileExists{./config/pdf/statement.pdf}{
     \AtBeginDocument{
-        \includepdf[pages={-, {}}, fitpaper=true]{./config/pdf/statement.pdf}
+        \includepdf[pages={1, {}}, fitpaper=true]{./config/pdf/statement.pdf}
     }
 }{
     \ClassError{csuthesis}{
         File 'statement.pdf' not found! \MessageBreak
-        Please run 'python config.py' in the terminal to generate 'statement.pdf' based on the information in 'config.json', or provide a custom statement PDF at './config/pdf/statement.pdf'.
+        Please run 'python ./config/src/converter.py' in the terminal to generate 'statement.pdf' based on the information in 'config.json', or provide a custom statement PDF at './config/pdf/statement.pdf'.
     }{
         The document class csuthesis requires 'statement.pdf' for the statement page.
     }
 }
 
 %%%% - Add entry counters
-\newtotcounter{csu@bibcount}
-\let\csu@oldbibitem\bibitem
-\renewcommand{\bibitem}{\stepcounter{csu@bibcount}\csu@oldbibitem}
 \newtotcounter{csu@totalfigure}
 \newtotcounter{csu@totaltable}
 \AtBeginEnvironment{figure}{\stepcounter{csu@totalfigure}}
@@ -179,7 +211,7 @@
 \def\csu@enkeywords{}
 \def\csu@cnclc{}
 \newcommand{\cntitle}[1]{\def\csu@cntitle{#1}}
-\newcommand{\cnkeywords}[1]{\def\csu@enkeywords{#1}}
+\newcommand{\cnkeywords}[1]{\def\csu@cnkeywords{#1}}
 \newcommand{\entitle}[1]{\def\csu@entitle{#1}}
 \newcommand{\enkeywords}[1]{\def\csu@enkeywords{#1}}
 \newcommand{\cnclc}[1]{\def\csu@cnclc{#1}}
@@ -198,24 +230,24 @@
     % 摘要
     \vspace{20bp}
     \noindent {\zihao{4} \heiti \bfseries 摘要：}
-    \fontsize{14bp}{20bp}\selectfont \songti
+    \fontsize{14bp}{15bp}\selectfont \songti
 }{
     \par \mbox{} \par
 
     % 图表汇总
-    \vspace{20bp}
+    \vspace{10bp}
     \noindent
-    {\fontsize{14bp}{20bp}\selectfont \songti
+    {\fontsize{14bp}{15bp}\selectfont \songti
     图 \total{csu@totalfigure} 幅，表 \total{csu@totaltable} 个，参考文献 \total{csu@bibcount} 篇\par}
 
     
     % 关键词
-    \vspace{40bp}
-    \noindent {\fontsize{14bp}{20bp}\selectfont \heiti \bfseries 关键词：}
-    {\fontsize{14bp}{20bp}\selectfont \songti \csu@cnkeywords \par}
+    \vspace{30bp}
+    \noindent {\fontsize{14bp}{15bp}\selectfont \heiti \bfseries 关键词：}
+    {\fontsize{14bp}{15bp}\selectfont \songti \csu@cnkeywords \par}
     
     % 分类号
-    \noindent {\fontsize{14bp}{20bp}\selectfont \heiti \bfseries 分类号：}
+    \noindent {\fontsize{14bp}{15bp}\selectfont \heiti \bfseries 分类号：}
     {\fontsize{14bp}{20bp}\selectfont \songti \csu@cnclc \par}
     
     \clearpage
@@ -233,19 +265,19 @@
     \vspace{12bp}
     
     % Abstract Word
-    \vspace{20bp}
-    \noindent {\fontsize{14bp}{20bp} \heiti \bfseries Abstract:}
+    \vspace{10bp}
+    \noindent {\fontsize{14bp}{15bp} \heiti \bfseries Abstract:}
     \fontsize{14bp}{20bp}\selectfont \songti
 }{
     \par \mbox{} \par
     
     % Keywords
-    \vspace{40bp}
-    \noindent {\fontsize{14bp}{20bp}\selectfont \heiti \bfseries Keywords:}
-    {\fontsize{14bp}{20bp}\selectfont \songti \csu@enkeywords \par}
+    \vspace{23bp}
+    \noindent {\fontsize{14bp}{15bp}\selectfont \heiti \bfseries Keywords:}
+    {\fontsize{14bp}{15bp}\selectfont \songti \csu@enkeywords \par}
     
     % Classification
-    \noindent {\fontsize{14bp}{20bp}\selectfont \heiti \bfseries Classification:}
+    \noindent {\fontsize{14bp}{15bp}\selectfont \heiti \bfseries Classification:}
     {\fontsize{14bp}{20bp}\selectfont \songti \csu@cnclc \par}
     
     \clearpage
@@ -256,16 +288,16 @@
 %% Chapter
 \titlecontents{chapter}
   [0pt]
-  {\addvspace{18bp} \zihao{-4} \heiti \fontsize{12bp}{20bp}\selectfont}
+  {\zihao{-4} \heiti \fontsize{12bp}{20bp}\selectfont}
   {\thecontentslabel\quad}
   {}
   {\titlerule*[8pt]{.}\contentspage}
-  [\addvspace{6bp}] % 段后间距: 6bp
+  [\addvspace{0bp}] % 段后间距: 6bp
 
 %% Section
 \titlecontents{section}
   [12bp] % 左侧缩进 1 个字符 (小四号字宽为12bp)
-  {\zihao{-4} \songti \fontsize{12bp}{20bp}\selectfont}
+  {\zihao{-4} \songti \fontsize{12bp}{15bp}\selectfont}
   {\thecontentslabel\quad}
   {}
   {\titlerule*[8pt]{.}\contentspage}
@@ -273,7 +305,7 @@
 %% Subsection
 \titlecontents{subsection}
   [24bp]
-  {\zihao{-4} \songti \fontsize{12bp}{20bp}\selectfont}
+  {\zihao{-4} \songti \fontsize{12bp}{15bp}\selectfont}
   {\thecontentslabel\quad}
   {}
   {\titlerule*[8pt]{.}\contentspage}
@@ -331,9 +363,9 @@
 \newcommand{\setproofname}[1]{\renewcommand{\proofname}{#1}}
 \setproofname{证明}
 \newtheoremstyle{csutheorem}%%%% By Gemini
-  {1ex plus 0.2ex minus 0.2ex} % 段前额外间距
-  {1ex plus 0.2ex minus 0.2ex} % 段后额外间距
-  {\kaishu\itshape}            % 正文字体：中文楷体，英文/数学意大利斜体
+  {0.0ex plus 0.2ex minus 0.0ex} % 段前额外间距
+  {0.0ex plus 0.2ex minus 0.0ex} % 段后额外间距
+  {\kaishu\itshape\normalsize}            % 正文字体：中文楷体，英文/数学意大利斜体
   {}                           % 整体缩进量 (顶格)
   {\normalsize\reheiti}
   {}                           % 标题后的标点符号 (留空)
@@ -414,10 +446,20 @@
     font = csu@figfont
 }
 
+%%%% Items
+\setlist{
+    nosep,
+    noitemsep,       
+    topsep=0pt,       
+    parsep=0pt,       
+    partopsep=0pt,    
+    leftmargin=1.5em     
+}
+
 %%%% Reference
 \renewcommand{\bibfont}{\zihao{-4}\songti}
 \setlength{\biblabelsep}{1em}
-% \newtotcounter{csu@bibcount}
+\newtotcounter{csu@bibcount}
 \setcounter{csu@bibcount}{0}
 \AtDataInput{\stepcounter{csu@bibcount}}
 \newcommand{\makecsureferencepage}{
