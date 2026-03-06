@@ -244,7 +244,7 @@
     
     % 分类号
     \noindent {\fontsize{14bp}{15bp}\selectfont \heiti \bfseries 分类号：}
-    {\fontsize{14bp}{20bp}\selectfont \songti \csu@cnclc \par}
+    {\fontsize{14bp}{15bp}\selectfont \songti \csu@cnclc \par}
     
     \clearpage
 }
@@ -262,7 +262,7 @@
     % Abstract Word
     \vspace{10bp}
     \noindent {\fontsize{14bp}{15bp} \heiti \bfseries Abstract:}
-    \fontsize{14bp}{20bp}\selectfont \songti
+    \fontsize{14bp}{15bp}\selectfont \songti
 }{
     \par \mbox{} \par
     
@@ -273,7 +273,7 @@
     
     % Classification
     \noindent {\fontsize{14bp}{15bp}\selectfont \heiti \bfseries Classification:}
-    {\fontsize{14bp}{20bp}\selectfont \songti \csu@cnclc \par}
+    {\fontsize{14bp}{15bp}\selectfont \songti \csu@cnclc \par}
     
     \clearpage
 }
@@ -414,8 +414,8 @@
   {1.0ex} % 段前额外间距
   {0.0ex} % 段后额外间距
   {\kaishu\itshape\normalsize}            % 正文字体：中文楷体，英文/数学意大利斜体
-  {}                           % 整体缩进量 (顶格)
-  {\normalsize\reheiti}
+  {1em}                           % 整体缩进量 (顶格)
+  {\heiti}
   {}                           % 标题后的标点符号 (留空)
   {1em}                        % 标题与正文之间的水平间距
   {\thmname{#1}\textbf{\thmnumber{#2}}\thmnote{ (#3)}} % 格式：名称+编号+全角括号附加说明
@@ -436,7 +436,7 @@
   \pushQED{\qed}%
   \normalfont \topsep6\p@\@plus6\p@\relax
   \trivlist
-  \item[\hskip\labelsep\zihao{-4}\heiti #1：]\ignorespaces
+  \item[\hskip 0pt\zihao{-4}\heiti #1：]\ignorespaces
 }{%
   \popQED\endtrivlist\@endpefalse
 }
