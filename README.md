@@ -47,7 +47,7 @@ cd csu-thesis
 ### 3. Open and Compile
 Open the `example.tex` file using your preferred LaTeX editor. Recommended editors include:
 - **VS Code** (with the *LaTeX Workshop* extension)
-- **Overleaf** or **TeXPage**
+- **TeXPage** or **Overleaf**
 - **TeXstudio** (Windows / macOS / Linux)
 - **TeXmaker** (Windows / macOS / Linux)
 - **TeXifier** (macOS only)

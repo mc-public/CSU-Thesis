@@ -11,11 +11,11 @@
         \MessageBreak
         ********************************************************\MessageBreak
         **                                                      \MessageBreak
-        **   Error: USE 'xelatex' or 'luatex' to compile!       \MessageBreak
-        **   Error: Please use  to compile this thesis!         \MessageBreak
+        **   Error: USE 'xelatex' to compile!       \MessageBreak
+        **   Error: Please use it to compile this thesis!         \MessageBreak
         **                                                      \MessageBreak
         ********************************************************
-    }{Please use lualatex or xelatex to compile this thesis.}
+    }{Please use xelatex to compile this thesis.}
     \stop
 \fi
 
@@ -31,11 +31,7 @@
 }
 \DeclareStringOption[biber]{bibbackend}
 \ProcessKeyvalOptions*
-% 1. 关闭内容流压缩 (Text/Graphics streams)
-\special{pdf: compresslevel 0}
 
-% 2. 关闭对象流压缩 (Object streams, PDF 1.5+ 特性)
-\special{pdf: objcompresslevel 0}
 %%%% Requires
 \RequirePackage{xeCJK}
 \RequirePackage{geometry}
@@ -62,7 +58,7 @@
 ]{biblatex}
 
 
-%%%% -- Config Font
+%%%% Config Font
 \xeCJKsetup{CheckSingle,CJKmath=true}
 \setmainfont{TimesNewRoman-Regular.ttf}[
     ExternalLocation=config/font/,
@@ -107,13 +103,13 @@
 ]
 \newcommand{\kaishu}{\CJKfamily{kaishu}}
 
-%%%% -- Setup page geometry
+%%%% Setup page geometry
 
 %% 根据 Word 模版计算出来的 Magic Number
 \geometry{left=3.18cm, right=3.18cm, top=3.94cm, bottom=3.94cm, headheight=12.7pt, footskip=1.5cm}
 
 
-%%%% -- Set Content Format
+%%%% Set Content Format
 \setlength{\parindent}{2\ccwd}
 \ctexset{
     chapter = {
@@ -155,7 +151,7 @@
     \markboth{第\arabic{chapter}章\quad #1}{}%
 }
 
-%%%% -- Load auto-generated pdf
+%%%% Load auto-generated pdf
 \IfFileExists{./config/pdf/cover.pdf}{
     \AtBeginDocument{
         \includepdf[pages={1, {}}, fitpaper=true]{./config/pdf/cover.pdf}
@@ -195,7 +191,7 @@
     }
 }
 
-%%%% - Add entry counters
+%%%% Add entry counters
 \newtotcounter{csu@totalfigure}
 \newtotcounter{csu@totaltable}
 \AtBeginEnvironment{figure}{\stepcounter{csu@totalfigure}}
@@ -204,7 +200,7 @@
 \AtBeginEnvironment{table*}{\stepcounter{csu@totaltable}}
 
 
-%%%% - Add user defines
+%%%% Add user defines
 \def\csu@cntitle{}
 \def\csu@cnkeywords{}
 \def\csu@entitle{}
@@ -217,7 +213,7 @@
 \newcommand{\cnclc}[1]{\def\csu@cnclc{#1}}
 
 
-%%%% - Chinese Abstract Page
+%%%% Chinese Abstract Page
 \newenvironment{cnabstract}{
     \clearpage
     \pagenumbering{Roman} 
@@ -253,10 +249,9 @@
     \clearpage
 }
 
-%%%% - English Abstract Page
+%%%% English Abstract Page
 \newenvironment{enabstract}{
     \clearpage
-    \pagenumbering{Roman}
     \pagestyle{plain}
     
     % Big Title
@@ -284,7 +279,7 @@
 }
 
 
-%%%% - Make Table
+%%%% Make Table
 %% Chapter
 \titlecontents{chapter}
   [0pt]
@@ -320,7 +315,7 @@
     \@starttoc{toc}
     \clearpage
 }
-%%%% - Symbols
+%%%% Symbols
 \newenvironment{csusymbols}{
     \clearpage
     \pagestyle{plain}
@@ -334,24 +329,77 @@
     \clearpage
 }
 
+%%%% Mark content start
+\newif\ifcsu@content@started
+\csu@content@startedfalse
 \newcommand{\csucontentstart}{
+    \ifcsu@content@started%
+        \ClassWarning{csuthesis}{
+            Duplicate \string\csucontentstart\space command! \MessageBreak
+            It must be called only once before the first \string\chapter.
+            Remove the extra \string\csucontentstart\space commands
+        }
+        \clearpage
+        \vspace*{5cm}
+        \begin{center}
+            \zihao{3}\heiti\ifdefined\color\color{red}\fi
+            你竟然真的不小心\textbf{重复添加}了\texttt{\textbackslash csucontentstart}。\\
+            
+            可是这会导致\textbf{后续格式错乱}。\\
+        \end{center}
+        \vspace{1cm}
+        \noindent\zihao{4}\songti
+        你必须在正文开始之前的第一个 \texttt{\textbackslash chapter} 之前紧接着的地方添加命令 \texttt{\textbackslash csucontentstart}，并且只能添加一次。
+        
+        \vspace{1cm}
+        \noindent{\heiti 编译已经终止}，解决此错误后即可继续编译。
+        \clearpage
+        \stop\end{document}
+    \fi%
+    \csu@content@startedtrue
     \clearpage
     \pagenumbering{arabic}
     \pagestyle{csumain} 
     \makeatletter
     \renewcommand{\normalsize}{%
         \@setfontsize\normalsize{12bp}{15bp}%
-        \abovedisplayskip=7.5bp \@plus 2bp \@minus 2bp
-        \abovedisplayshortskip=7.5bp \@plus 2bp \@minus 2bp
+        \abovedisplayskip=3bp 
+        \abovedisplayshortskip=3bp
         \belowdisplayskip=\abovedisplayskip
         \belowdisplayshortskip=\abovedisplayshortskip
+        \setlength{\parskip}{0pt}
+        \linespread{1.0}
     }
     \makeatother
     \normalsize
 }
-\newenvironment{csuconfig}{}{\csucontentstart}
-
-%%%% -- Theorem API
+\newenvironment{csuconfig}{}{}
+\AddToHook{cmd/chapter/before}{%
+    \ifcsu@content@started\else
+        \ClassWarning{csuthesis}{
+            Command \string\csucontentstart\space is missing! \MessageBreak
+            You MUST call \string\csucontentstart\space \MessageBreak
+            before the first \string\chapter
+        }%
+        \clearpage
+        \vspace*{5cm}
+        \begin{center}
+            \zihao{3}\heiti\ifdefined\color\color{red}\fi
+            你竟然真的不小心\textbf{漏掉}了\texttt{\textbackslash csucontentstart}。
+            
+            可是这会导致\textbf{后续格式错乱}。\\
+        \end{center}
+        \vspace{1cm}
+        \noindent\zihao{4}\songti
+        你必须在正文开始之前的第一个 \texttt{\textbackslash chapter} 之前紧接着的地方添加命令 \texttt{\textbackslash csucontentstart}。
+        
+        \vspace{1cm}
+        \noindent{\heiti 编译已经终止}，解决此错误后即可继续编译。
+        \clearpage
+        \stop\end{document}
+    \fi
+}
+%%%% Theorem API
 \newcommand{\csu@name@definition}{定义}
 \newcommand{\csu@name@theorem}{定理}
 \newcommand{\csu@name@lemma}{引理}
@@ -363,8 +411,8 @@
 \newcommand{\setproofname}[1]{\renewcommand{\proofname}{#1}}
 \setproofname{证明}
 \newtheoremstyle{csutheorem}%%%% By Gemini
-  {0.0ex plus 0.2ex minus 0.0ex} % 段前额外间距
-  {0.0ex plus 0.2ex minus 0.0ex} % 段后额外间距
+  {1.0ex} % 段前额外间距
+  {0.0ex} % 段后额外间距
   {\kaishu\itshape\normalsize}            % 正文字体：中文楷体，英文/数学意大利斜体
   {}                           % 整体缩进量 (顶格)
   {\normalsize\reheiti}
@@ -382,7 +430,7 @@
 \newcommand{\setassumename}[1]{\newtheorem{#1}{\csu@name@assume}[chapter]}
 
 
-%%%% - Proof Environment
+%%%% Proof Environment
 \makeatletter
 \renewenvironment{proof}[1][\proofname]{\par
   \pushQED{\qed}%
@@ -394,7 +442,7 @@
 }
 \makeatother
 
-%%%% - Number Within
+%%%% Number Within
 \numberwithin{equation}{chapter}
 \numberwithin{table}{chapter}
 \numberwithin{figure}{chapter}
@@ -407,7 +455,7 @@
   {}{}
 
 
-%%%% - Table Control
+%%%% Table Control
 \DeclareCaptionFont{csu@tablefont}{\zihao{5}\kaishu} 
 \DeclareCaptionFont{csu@figfont}{\zihao{5}\kaishu} 
 \captionsetup[table]{
@@ -427,7 +475,7 @@
     \renewcommand{\arraystretch}{1.0}
 }
 
-%%%% - Figure Control
+%%%% Figure Control
 \captionsetup[figure]{
     font = csu@figfont,
     labelfont = md,
