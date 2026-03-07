@@ -1,5 +1,5 @@
 % csuthesis.cls
-% 2026/03/05 v1.1 CSU Thesis Template
+% 2026/03/07 v1.1 CSU Thesis Template
 % Require: texlive 2020+
 % Author: ChaoMeng 
 
@@ -20,7 +20,7 @@
 \fi
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{csuthesis}[2026/03/05 v1.1 CSU Thesis Template]
+\ProvidesClass{csuthesis}[2026/03/07 v1.1 CSU Thesis Template]
 \LoadClass[a4paper, openany, fontset=none, UTF8]{ctexbook}
 %%%% Options
 \RequirePackage{kvoptions}
@@ -586,4 +586,32 @@
 }{
     \clearpage
 }
+
+
+%%%% Package safe check and remove
+\makeatletter
+\@namedef{ver@bm.sty}{2026/03/04 Fake bm package for csuthesis compatibility}
+
+\AtBeginDocument{
+  \@ifpackageloaded{newtxmath}{
+    \ClassError{csuthesis}{
+      \MessageBreak
+      The 'newtxmath' package conflicts with modern math fonts (unicode-math).\MessageBreak
+      Please remove \string\usepackage{newtxmath} from your preamble.%
+    }{%
+      Package 'newtxmath' is strictly forbidden!%
+    }
+  }{}
+  \@ifpackageloaded{newtxtext}{
+    \ClassError{csuthesis}{
+      \MessageBreak
+      The 'newtxtext' package conflicts with modern text fonts (fontspec).\MessageBreak
+      Please remove \string\usepackage{newtxtext} from your preamble.%
+    }{Package 'newtxtext' is strictly forbidden!}
+  }{}
+}
+\makeatother
+
+
+
 \endinput
