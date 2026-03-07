@@ -42,7 +42,6 @@
 \RequirePackage{amsthm}
 \RequirePackage{amsmath}
 \RequirePackage{amssymb}
-\RequirePackage{newtxmath}  
 \RequirePackage{caption}
 \RequirePackage{subcaption} 
 \RequirePackage{booktabs}
@@ -66,6 +65,13 @@
     ItalicFont = TimesNewRoman-Italic.ttf,
     BoldItalicFont = TimesNewRoman-Bold-Italic.ttf
 ]
+\RequirePackage{unicode-math}
+\setmathfont{XITSMath-Regular.otf}[
+    ExternalLocation=config/font/
+]
+\newcommand{\bm}[1]{\symbfit{#1}}
+\renewcommand{\mathbf}[1]{\symbf{#1}}
+\renewcommand{\boldsymbol}[1]{\symbf{#1}}
 \setCJKmainfont{SimSun.ttf}[
     ExternalLocation=config/font/,
     BoldFont = SimHei.ttf,
@@ -102,6 +108,7 @@
     ItalicFont=SimKai.ttf
 ]
 \newcommand{\kaishu}{\CJKfamily{kaishu}}
+% \RequirePackage{newtxmath}
 
 %%%% Setup page geometry
 
@@ -363,8 +370,8 @@
     \makeatletter
     \renewcommand{\normalsize}{%
         \@setfontsize\normalsize{12bp}{15bp}%
-        \abovedisplayskip=3bp 
-        \abovedisplayshortskip=3bp
+        \abovedisplayskip=5bp 
+        \abovedisplayshortskip=5bp
         \belowdisplayskip=\abovedisplayskip
         \belowdisplayshortskip=\abovedisplayshortskip
         \setlength{\parskip}{0pt}
@@ -406,6 +413,7 @@
 \newcommand{\csu@name@corollary}{推论}
 \newcommand{\csu@name@remark}{注}
 \newcommand{\csu@name@assume}{假设}
+\newcommand{\csu@name@proposition}{命题}
 
 
 \newcommand{\setproofname}[1]{\renewcommand{\proofname}{#1}}
@@ -414,7 +422,7 @@
   {1.0ex} % 段前额外间距
   {0.0ex} % 段后额外间距
   {\kaishu\itshape\normalsize}            % 正文字体：中文楷体，英文/数学意大利斜体
-  {1em}                           % 整体缩进量 (顶格)
+  {0em}                           % 整体缩进量 (顶格)
   {\heiti}
   {}                           % 标题后的标点符号 (留空)
   {1em}                        % 标题与正文之间的水平间距
@@ -424,6 +432,7 @@
 
 \newcommand{\setdefinitionname}[1]{\newtheorem{#1}{\csu@name@definition}[chapter]}
 \newcommand{\settheoremname}[1]{\newtheorem{#1}{\csu@name@theorem}[chapter]}
+\newcommand{\setpropositionname}[1]{\newtheorem{#1}{\csu@name@proposition}[chapter]}
 \newcommand{\setlemmaname}[1]{\newtheorem{#1}{\csu@name@lemma}[chapter]}
 \newcommand{\setcorollaryname}[1]{\newtheorem{#1}{\csu@name@corollary}[chapter]}
 \newcommand{\setremarkname}[1]{\newtheorem{#1}{\csu@name@remark}[chapter]}
@@ -434,13 +443,17 @@
 \makeatletter
 \renewenvironment{proof}[1][\proofname]{\par
   \pushQED{\qed}%
-  \normalfont \topsep6\p@\@plus6\p@\relax
+  \normalfont 
+  \topsep=10pt\relax
+  \partopsep=0pt\relax
   \trivlist
-  \item[\hskip 0pt\zihao{-4}\heiti #1：]\ignorespaces
+  \item[\hskip\labelsep\zihao{-4}\heiti #1]\ignorespaces
 }{%
   \popQED\endtrivlist\@endpefalse
 }
 \makeatother
+\allowdisplaybreaks[4]
+
 
 %%%% Number Within
 \numberwithin{equation}{chapter}
