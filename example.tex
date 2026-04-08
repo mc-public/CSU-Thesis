@@ -30,7 +30,8 @@
 %% * 目录, 图例数量, 交叉引用, 公式编号:
 %% *   ** 使用正确的构建方式, 框架会为你自动处理.
 
-\documentclass{csuthesis}
+\documentclass[bibbackend=biber]{csuthesis}
+%%% 可以用 [bibbackend=bibtex] 选项切换到 bibtex 后端.
 
 %%% Note 以下宏包仅用于 **符号说明** 部分的示例
 \usepackage{longtable, array} % 用于符号说明部分的示例
@@ -54,6 +55,9 @@
 \setcorollaryname{Corollary}
 \setremarkname{Remark}
 \setassumename{Assume}
+%%%%%%%%% -- 如果需要自定义定理环境，可以在这里添加
+\theoremstyle{csutheorem}
+\newtheorem{customtheorem}{猜想or断言or论断or例}[chapter]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%% -- 参考文献源文件
 \addbibresource{ref.bib}
@@ -167,7 +171,27 @@
         \bottomrule % 底部粗线 (1.5bp)
     \end{tabular}
 \end{table}
-
+再定义一个算法.
+\begin{mdframed}
+\captionof{algorithm}{算法名称（支持自动跨页）}
+\label{alg:long_algo}
+\begin{algorithmic}[1] % [1] 表示每行显示行号
+    \Require 输入数据 $X$
+    \Ensure 输出数据 $Y$
+    
+    \For{$i \gets 1$ \textbf{到} $100$}
+        \State 执行第一步操作 \Comment{这是注释}
+        \State 执行第二步操作
+        \State 这里假设内容非常长...
+        \State 长到一页放不下...
+        \State 自动断页到下一页...
+    \EndFor
+    
+    \While{条件成立}
+        \State 循环体内容
+    \EndWhile
+\end{algorithmic}
+\end{mdframed}
 \subsection{第二小节}
 这是主公式的普通编号，默认在右侧且无虚线：
 \begin{equation}
@@ -206,6 +230,7 @@
 \end{figure}
 
 \section{研究现状}
+详细内容可以参考\ref{my-first-appendix}.
 \section{研究目的}
 \section{论文结构安排}
 \subsection{第一小节}
@@ -226,7 +251,7 @@
 \makecsureferencepage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%% -- 附录 A
-\begin{csuappendix}
+\begin{csuappendix}\label{my-first-appendix}
     这是第一个附录的正文。它的标题会自动变成“附录 A”。
     
     附录里的公式编号将被标记一个 A。

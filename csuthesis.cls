@@ -1,7 +1,7 @@
 % csuthesis.cls
-% 2026/03/07 v1.1 CSU Thesis Template
+% 2026/04/09 v2.0 CSU Thesis Template
 % Require: texlive 2020+
-% Author: ChaoMeng 
+% Author: Chao Meng 
 
 %%%% Engine Check
 \RequirePackage{iftex}
@@ -21,8 +21,8 @@
 
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{csuthesis}[2026/03/07 v1.1 CSU Thesis Template]
-\LoadClass[a4paper, openany, fontset=none, UTF8]{ctexbook}
 %%%% Options
+
 \RequirePackage{kvoptions}
 \SetupKeyvalOptions{
     family=csu,
@@ -30,7 +30,14 @@
     setkeys=\kvsetkeys
 }
 \DeclareStringOption[biber]{bibbackend}
+\DeclareBoolOption[true]{notexpresso}
 \ProcessKeyvalOptions*
+\ifcsu@notexpresso
+\LoadClass[a4paper, openany, fontset=none, UTF8]{ctexbook}
+\else
+\LoadClass[a4paper, openany, UTF8]{ctexbook}
+\fi
+
 
 %%%% Requires
 \RequirePackage{xeCJK}
@@ -48,30 +55,68 @@
 \RequirePackage{array}
 \RequirePackage{etoolbox}
 \RequirePackage{enumitem}
-\RequirePackage[
+\RequirePackage[boxed, ruled]{algorithm}
+\RequirePackage{mdframed}
+\RequirePackage{algpseudocode}
+\usepackage[
     backend=\csu@bibbackend,
-    style=gb7714-2015,
-    sorting=none,      
-    maxnames=3,
-    minnames=1
+    style=gb7714-2015,      % 使用 GB/T 7714-2015 样式
+    gbnamefmt=lowercase,    % 作者姓氏仅首字母大写，不全大写（符合您的图片样例）
+    url=false,              % 抑制 URL 字段
+    doi=false,              % 抑制 DOI 字段
+    isbn=false,             % 抑制 ISBN 字段
+    eprint=false,           % 抑制 arXiv 等 eprint 字段
+    related=false,           % 抑制 related 字段
 ]{biblatex}
+\renewbibmacro*{in:}{%
+  \printtext{\addperiod\space}% 将 // 替换为句号和空格
+}
+
+\let\inlinecite\parencite
+
+%%%% Config Alg
+\floatname{algorithm}{算法}
+\renewcommand{\algorithmicrequire}{\textbf{输入：}}
+\renewcommand{\algorithmicensure}{\textbf{输出：}}
+\renewcommand{\algorithmicend}{\textbf{结束}}
+\renewcommand{\algorithmicif}{\textbf{如果}}
+\renewcommand{\algorithmicthen}{\textbf{则}}
+\renewcommand{\algorithmicelse}{\textbf{否则}}
+\renewcommand{\algorithmicfor}{\textbf{对于}}
+\renewcommand{\algorithmicforall}{\textbf{对于所有}}
+\renewcommand{\algorithmicdo}{\textbf{执行}}
+\renewcommand{\algorithmicwhile}{\textbf{当}}
+\renewcommand{\algorithmicloop}{\textbf{循环}}
+\renewcommand{\algorithmicrepeat}{\textbf{重复}}
+\renewcommand{\algorithmicuntil}{\textbf{直到}}
 
 
 %%%% Config Font
 \xeCJKsetup{CheckSingle,CJKmath=true}
-\setmainfont{TimesNewRoman-Regular.ttf}[
-    ExternalLocation=config/font/,
-    BoldFont = TimesNewRoman-Bold.ttf,
-    ItalicFont = TimesNewRoman-Italic.ttf,
-    BoldItalicFont = TimesNewRoman-Bold-Italic.ttf
-]
-\RequirePackage{unicode-math}
-\setmathfont{XITSMath-Regular.otf}[
-    ExternalLocation=config/font/
-]
+\ifcsu@notexpresso
+    \setmainfont{TimesNewRoman-Regular.ttf}[
+        ExternalLocation=config/font/,
+        BoldFont = TimesNewRoman-Bold.ttf,
+        ItalicFont = TimesNewRoman-Italic.ttf,
+        BoldItalicFont = TimesNewRoman-Bold-Italic.ttf
+    ]
+    \RequirePackage{unicode-math}
+    \setmathfont{XITSMath-Regular.otf}[
+        ExternalLocation=config/font/
+    ]
+    % \setmathfont[range={"002C}]{Latin Modern Math}
+
+\else
+    \RequirePackage{unicode-math}
+\fi
+
+\AtBeginDocument{
 \newcommand{\bm}[1]{\symbfit{#1}}
 \renewcommand{\mathbf}[1]{\symbf{#1}}
 \renewcommand{\boldsymbol}[1]{\symbf{#1}}
+}
+
+\ifcsu@notexpresso
 \setCJKmainfont{SimSun.ttf}[
     ExternalLocation=config/font/,
     BoldFont = SimHei.ttf,
@@ -95,12 +140,8 @@
     ExternalLocation=config/font/,
     AutoFakeBold=true
 ]
-\setCJKfamilyfont{reheiti}{SimHei.ttf}[
-    ExternalLocation=config/font/,
-    AutoFakeBold=false
-]
 \newcommand{\heiti}{\CJKfamily{heiti}}
-\newcommand{\reheiti}{\CJKfamily{reheiti}}
+
 %% Set kaishu
 \setCJKfamilyfont{kaishu}{SimKai.ttf}[
     ExternalLocation=config/font/,
@@ -108,7 +149,9 @@
     ItalicFont=SimKai.ttf
 ]
 \newcommand{\kaishu}{\CJKfamily{kaishu}}
-% \RequirePackage{newtxmath}
+\else
+\renewcommand{\kaishu}{}
+\fi
 
 %%%% Setup page geometry
 
@@ -159,6 +202,7 @@
 }
 
 %%%% Load auto-generated pdf
+\ifcsu@notexpresso
 \IfFileExists{./config/pdf/cover.pdf}{
     \AtBeginDocument{
         \includepdf[pages={1, {}}, fitpaper=true]{./config/pdf/cover.pdf}
@@ -197,6 +241,7 @@
         The document class csuthesis requires 'statement.pdf' for the statement page.
     }
 }
+\fi
 
 %%%% Add entry counters
 \newtotcounter{csu@totalfigure}
@@ -368,18 +413,33 @@
     \pagenumbering{arabic}
     \pagestyle{csumain} 
     \makeatletter
-    \renewcommand{\normalsize}{%
-        \@setfontsize\normalsize{12bp}{15bp}%
-        \abovedisplayskip=5bp 
-        \abovedisplayshortskip=5bp
-        \belowdisplayskip=\abovedisplayskip
-        \belowdisplayshortskip=\abovedisplayshortskip
+    \g@addto@macro\normalsize{%
+        \@setfontsize\normalsize{13bp}{20bp}%
+        \baselineskip=20bp
+        \renewcommand{\baselinestretch}{1.0}
+        \abovedisplayskip=8bp 
+        \abovedisplayshortskip=8bp
+        \belowdisplayskip=8bp
+        \belowdisplayshortskip=8bp
+        \setlength{\parskip}{0pt}
+        \linespread{1.0}
+    }
+    \newcommand{\forcenormalsize}{%
+        \@setfontsize\normalsize{13bp}{20bp}%
+        \baselineskip=20bp
+        \renewcommand{\baselinestretch}{1.0}
+        \abovedisplayskip=8bp 
+        \abovedisplayshortskip=8bp
+        \belowdisplayskip=8bp
+        \belowdisplayshortskip=8bp
         \setlength{\parskip}{0pt}
         \linespread{1.0}
     }
     \makeatother
     \normalsize
 }
+
+
 \newenvironment{csuconfig}{}{}
 \AddToHook{cmd/chapter/before}{%
     \ifcsu@content@started\else
@@ -414,29 +474,32 @@
 \newcommand{\csu@name@remark}{注}
 \newcommand{\csu@name@assume}{假设}
 \newcommand{\csu@name@proposition}{命题}
-
+\newcommand{\csu@name@claim}{论断}
+\newcommand{\csu@name@conjecture}{猜想}
 
 \newcommand{\setproofname}[1]{\renewcommand{\proofname}{#1}}
 \setproofname{证明}
 \newtheoremstyle{csutheorem}%%%% By Gemini
-  {1.0ex} % 段前额外间距
-  {0.0ex} % 段后额外间距
-  {\kaishu\itshape\normalsize}            % 正文字体：中文楷体，英文/数学意大利斜体
+  {16bp} % 段前额外间距
+  {16bp} % 段后额外间距
+  {\kaishu\forcenormalsize}            % 正文字体：中文楷体，英文/数学意大利斜体
   {0em}                           % 整体缩进量 (顶格)
   {\heiti}
   {}                           % 标题后的标点符号 (留空)
-  {1em}                        % 标题与正文之间的水平间距
-  {\thmname{#1}\textbf{\thmnumber{#2}}\thmnote{ (#3)}} % 格式：名称+编号+全角括号附加说明
+  {0.6em}                        % 标题与正文之间的水平间距
+  {\thmname{#1}\textbf{\thmnumber{#2}}\thmnote{ (\songti #3)}} % 格式：名称+编号+全角括号附加说明
 
 \theoremstyle{csutheorem}
 
 \newcommand{\setdefinitionname}[1]{\newtheorem{#1}{\csu@name@definition}[chapter]}
 \newcommand{\settheoremname}[1]{\newtheorem{#1}{\csu@name@theorem}[chapter]}
 \newcommand{\setpropositionname}[1]{\newtheorem{#1}{\csu@name@proposition}[chapter]}
+\newcommand{\setclaimname}[1]{\newtheorem{#1}{\csu@name@claim}[chapter]}
 \newcommand{\setlemmaname}[1]{\newtheorem{#1}{\csu@name@lemma}[chapter]}
 \newcommand{\setcorollaryname}[1]{\newtheorem{#1}{\csu@name@corollary}[chapter]}
 \newcommand{\setremarkname}[1]{\newtheorem{#1}{\csu@name@remark}[chapter]}
 \newcommand{\setassumename}[1]{\newtheorem{#1}{\csu@name@assume}[chapter]}
+\newcommand{\setconjecturename}[1]{\newtheorem{#1}{\csu@name@conjecture}[chapter]}
 
 
 %%%% Proof Environment
@@ -509,12 +572,15 @@
 
 %%%% Items
 \setlist{
-    nosep,
+    % nosep,
     noitemsep,       
-    topsep=0pt,       
-    parsep=0pt,       
-    partopsep=0pt,    
-    leftmargin=1.5em     
+    nosep,
+    % topsep=8bp,
+    parsep=4bp,       
+    partopsep=0bp,    
+    after=\vspace{2bp},
+    % before=\vspace{0bp},
+    % leftmargin=1.5em     
 }
 
 %%%% Reference
@@ -558,17 +624,38 @@
 }
 
 %%%% Appendix
+\makeatletter
 \newcounter{csu@appendix}
 \setcounter{csu@appendix}{0}
+
+\providecommand{\csu@totapp@count}{0}
+
+\AtEndDocument{%
+  \if@filesw
+    \immediate\write\@mainaux{%
+      \string\gdef\string\csu@totapp@count{\number\value{csu@appendix}}%
+    }%
+  \fi
+}
+
 \newenvironment{csuappendix}[1][]{
     \clearpage
     \stepcounter{csu@appendix}
-    
-    \ifstrempty{#1}{
-        \def\csu@app@title{附录 \Alph{csu@appendix}}
-    }{
-        \def\csu@app@title{附录 \Alph{csu@appendix}\quad #1}
-    }
+    \ifnum\csu@totapp@count<2
+        \ifstrempty{#1}{
+            \def\csu@app@title{附录}
+        }{
+            \def\csu@app@title{附录\quad #1}
+        }
+        \def\@currentlabel{附录}
+    \else
+        \ifstrempty{#1}{
+            \def\csu@app@title{附录 \Alph{csu@appendix}}
+        }{
+            \def\csu@app@title{附录 \Alph{csu@appendix}\quad #1}
+        }
+        \def\@currentlabel{附录 \Alph{csu@appendix}}
+    \fi
     
     \markboth{\csu@app@title}{}
     \addcontentsline{toc}{chapter}{\csu@app@title}
@@ -586,6 +673,7 @@
 }{
     \clearpage
 }
+\makeatother
 
 
 %%%% Package safe check and remove
